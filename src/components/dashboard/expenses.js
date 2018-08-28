@@ -19,10 +19,16 @@ class Expenses extends Component {
   }
 
   renderExpenses(expenses) {
-
     if(expenses) {
       if(expenses.length > 0) {
       return expenses.reverse().map((item,index)=> {
+        let date;
+        if(moment(item.date).format('MMM YYYY') === moment().format('MMM YYYY') ){
+          date = moment(item.date).fromNow();
+        }else {
+          date = moment(item.date).format('MMM Do YYYY');
+        }
+
         return(
 
           <div className="expenses-container" key={index}>
@@ -30,7 +36,7 @@ class Expenses extends Component {
           <div className="detail">
           <div className="description"><strong>{item.description}</strong></div>
           { item.notes ? <div className="notes"> {item.notes} </div> : ''}
-          <div className="date">{moment(item.date).format('MMM Do YYYY')}</div>
+          <div className="date">{date}</div>
           <div className="remove" onClick={()=>this.removeExpense(this.props.id,this.props.month,item.id)}>Remove</div>
 
           </div>
@@ -42,7 +48,7 @@ class Expenses extends Component {
       });
     }else if (expenses.length === 0) {
       return(
-        <div className="empty-data"><i className="fa fa-edit"/> &nbsp; No Expense Made Yet...</div>
+        <div className="empty-data"><i className="fa fa-edit"/> &nbsp; {this.props.error}</div>
       )
     }
 
@@ -61,10 +67,12 @@ class Expenses extends Component {
         total = total + item.amount;
       })
       return(
+
         <div className="totalexp-card">
         <div className="month"><strong>{this.props.month}</strong></div>.
         <div className="total"><div className="amount">{numeral(total).format('0,0')}</div> <div>Expenses</div></div>
         </div>
+
       )
     }
   }

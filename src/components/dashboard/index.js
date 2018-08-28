@@ -13,11 +13,12 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
-      month: moment().format('MMMM')
+      month: moment().format('MMMM'),
+      searchTerm: ''
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     if(this.props.user) {
        const month = moment().format('MMMM');
       this.props.dispatch(actions.fetchRecords(this.props.user.id,month));
@@ -25,8 +26,6 @@ class Dashboard extends Component {
   }
 
   switchMonth(e) {
-
-
     this.setState({month: e.target.value});
     this.props.dispatch(actions.fetchRecords(this.props.user.id,e.target.value));
   }
@@ -34,16 +33,38 @@ class Dashboard extends Component {
 
 
 render() {
+
   let id = '';
     if(this.props.user) {
       id = this.props.user.id;
+    }
+
+    let expenses;
+    let sError;
+
+    if(this.state.searchTerm !== '' ) {
+      const searchTerm = String(this.state.searchTerm).toLowerCase();
+      expenses = [];
+      const data = this.props.expenses;
+      if(data.length > 0 ) {
+        data.map((item) => {
+          if(String(item.description).toLowerCase().includes(searchTerm) || String(item.notes).toLowerCase().includes(searchTerm) ){
+            expenses.push(item);
+          }
+        })
+      }
+      sError = `Unable to find the Match for ''${this.state.searchTerm}''`;
+    }else if (this.state.searchTerm === '') {
+        expenses = this.props.expenses;
+         sError = 'No Expenses Made Yet...';
     }
     return(
     <div>
     <Header/>
     <div className="choose-month">
     <div className="months">
-    <label>Choose Month:</label>
+    <label>Choose Month: <i className="fa fa-calendar-alt"/></label>
+
     <select defaultValue={this.state.month} onChange={(e)=> {this.switchMonth(e)}}>
     <option value="January">January</option>
     <option value="February">February</option>
@@ -58,9 +79,11 @@ render() {
     <option value="November">November</option>
     <option value="December">December</option>
     </select>
+    <div className="input"> <input type="search" placeholder=" Try ''Food'' " value={this.state.searchTerm} onChange={(e)=>this.setState({searchTerm: e.target.value})} /> <i className="fa fa-search"/> </div>
     </div>
+
     </div>
-    <Expenses id={id} month={this.state.month} expenses={this.props.expenses} />
+    <Expenses error={sError} id={id} month={this.state.month} expenses={expenses} />
     </div>
   )
 }

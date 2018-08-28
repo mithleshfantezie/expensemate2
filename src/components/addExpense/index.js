@@ -54,6 +54,13 @@ const className =  field.meta.touched && field.meta.error ? `form-group has-erro
     <option value="medkit">Health</option>
     <option value="graduation-cap">Education</option>
     <option value="shopping-bag">Shopping</option>
+    <option value="birthday-cake">Birthday</option>
+    <option value="child">Party</option>
+    <option value="tshirt">Cloth</option>
+    <option value="bus-alt">Bus</option>
+    <option value="hands-helping">Payment</option>
+    <option value="beer">Drinks</option>
+
     <option value="question">Other</option>
     </select>
     <div className="error">

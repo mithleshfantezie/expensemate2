@@ -9,6 +9,7 @@ const Home = () => {
     <div className="home">
     <div className="app-name"><strong>ExpenseMate</strong></div>
     <div className="login-btn" onClick={()=>login()}><i className="fab fa-google"/> <strong>Login in with Google</strong></div>
+
     </div>
   )
 }
